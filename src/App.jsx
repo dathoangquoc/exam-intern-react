@@ -1,5 +1,5 @@
 import './App.css'
-import { use, useState } from 'react';
+import { useState } from 'react';
 
 const products = [
   { id: 1, name: 'Áo thun trắng', price: 150000, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab' },
@@ -40,32 +40,38 @@ function App() {
     setIsCartShown((prev) => !prev)
   }
 
+  // Currency Display
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price)
+  }
+
   return (
     <main>
-      <div className='fixed top-0 right-0 w-full shadow-md z-10'>
+      <div className='fixed top-0 right-0 w-full shadow-md z-10 bg-white'>
         {/* Header */}
-        <div className='flex justify-end p-4'>
+        <div className='flex justify-end p-4 relative'>
           <button className=' px-4 py-2 rounded' onClick={showCart}>Giỏ hàng 🛒</button>
+          <p className='bg-red-400 w-7 h-7 rounded-full absolute top-2 right-2'>{cart.length}</p>
         </div>
 
         {/* Cart */}
         {
           isCartShown ? (
-            <div className='absolute top-16 right-4 rounded shadow-lg px-4 w-80 z-20'>
+            <div className='absolute top-16 right-4 rounded-lg shadow-lg border border-black/10 px-4 w-96 z-20 bg-white'>
               {cart.length > 0 ? (
                 cart.map((item) => (
-                  <div key={item.id} className='flex items-center mb-4 py-2'>
-                    <div className='h-14 w-14 mr-4'>
+                  <div key={item.id} className='flex items-center py-2'>
+                    <div className='h-20 aspect-square mr-4'>
                       <img src={item.image} alt={item.name} title={item.name} className='h-full w-full object-cover rounded-lg' />
                     </div>
                     <div className='text-left flex-1'>
                       <p className='font-semibold'>{item.name}</p>
-                      <p className='text-sm'>Thành tiền: {item.price} x {item.quantity} = {item.price * item.quantity} VND</p>
+                      <p className='text-xs'>Thành tiền: {formatPrice(item.price)} x {item.quantity} = {formatPrice(item.price * item.quantity)} VND</p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p>Giỏ hàng trống</p>
+                <p className='min-h-10 p-4'>Giỏ hàng trống</p>
               )}
             </div>
           ) : (
@@ -78,16 +84,16 @@ function App() {
       {/* Products */}
       <div className="flex flex-wrap justify-center mt-24">
         {products.map((item) => (
-          <div key={item.id} className='w-64 p-4'>
-            <div className='h-64'>
+          <div key={item.id} className='w-64 p-2'>
+            <div className='h-60 aspect-square'>
               <img src={item.image} alt={item.name} title={item.name} className='h-full w-full object-cover rounded-lg' />
             </div>
-            <div className='flex justify-between items-center mt-4'>
+            <div className='flex justify-between items-center mt-4 w-full'>
               <div className='text-left'>
                 <p className='font-semibold'>{item.name}</p>
-                <p className='text-sm'>{item.price} VND</p>
+                <p className='text-sm'>{formatPrice(item.price)} VND</p>
               </div>
-              <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={() => addToCart(item)}>🛒</button>
+              <button className='p-4 rounded' onClick={() => addToCart(item)}>🛒</button>
             </div>
           </div>
         ))}
